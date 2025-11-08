@@ -1,0 +1,11 @@
+name: "financial_data"
+version: "1.0"
+config-version: 2
+
+profile: "redshift_profile"
+
+model-paths: ["models"]
+
+models:
+  financial_data:
+    +materialized: view

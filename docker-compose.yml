@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  localstack:
+    image: localstack/localstack:1.4
+    container_name: localstack
+    environment:
+      - SERVICES=s3
+      - DEFAULT_REGION=us-east-2
+    ports:
+      - "4566:4566"
+    volumes:
+      - ./localstack:/var/lib/localstack
+
+  airflow:
+    build: ./airflow
+    container_name: airflow
+    restart: unless-stopped
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./etl:/opt/airflow/etl
+    depends_on:
+      - localstack
+
+  streamlit:
+    image: python:3.11
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: ["streamlit", "run", "notebooks/analysis.py"]
+    ports:
+      - "8501:8501"
