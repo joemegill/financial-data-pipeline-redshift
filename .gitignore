@@ -2,3 +2,10 @@ __pycache__/
 .env
 *.pyc
 /data/
+localstack/cache/server.test.pem
+localstack/cache/server.test.pem.crt
+.gitignore
+localstack/logs/localstack_infra.err
+localstack/logs/localstack_infra.log
+localstack/cache/service-catalog-1_4_0-1_29_69.pickle
+localstack/cache/machine.json

@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   localstack:
     image: localstack/localstack:1.4
@@ -26,12 +25,25 @@ services:
       - ./etl:/opt/airflow/etl
     depends_on:
       - localstack
+    command: >
+      bash -c "
+        echo '--- Fixing DAGs directory permissions ---' &&
+        chown -R airflow: /opt/airflow/dags /opt/airflow/etl &&
+        echo '--- Initializing Airflow Database ---' &&
+        airflow db migrate && 
+        echo '--- Creating Admin User (admin/admin) ---' &&
+        airflow users create --username admin --firstname Airflow --lastname Admin --role Admin --email admin@example.com --password admin && 
+        echo '--- Starting Airflow Webserver (Foreground) ---' &&
+        exec airflow webserver"
 
   streamlit:
-    image: python:3.11
+    build: 
+        context: . 
+        dockerfile: ./streamlit/Dockerfile
+    # image: python:3.11
     working_dir: /app
     volumes:
       - .:/app
-    command: ["streamlit", "run", "notebooks/analysis.py"]
+    command: [ "streamlit", "run", "notebooks/analysis.py"]
     ports:
       - "8501:8501"

@@ -4,3 +4,4 @@ psycopg2-binary
 requests
 pandas
 python-dotenv
+apache-airflow-providers-amazon

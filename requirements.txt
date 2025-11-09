@@ -8,3 +8,4 @@ dbt-redshift
 streamlit
 prefect
 python-dotenv
+streamlit
